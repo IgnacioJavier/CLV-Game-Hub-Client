@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src * self blob data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; media-src *; object-src * self blob: data: gap:; img-src * self blob: data: gap:; frame-src * self blob: data: gap:;"> -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' *; frame-src 'self' *">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1.0, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/index.css">
+        <title>CLV Game Hub</title>
+    </head>
+    <body>
+        <div class="app container-fluid">
+            <div class="container-fluid d-flex flex-column vh-100">
+                <!-- Cabecera app -->
+                <header class="d-flex flex-wrap p-3 text-bg-dark" id="cabecera">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-12">
+                        <img class="rounded-circle img-fluid align-self-start" src="./img/logo_cab.png" id="icono_navbar">
+                        <button type="button" class="btn btn-light text-dark" data-bs-toggle="modal" data-bs-target="#modalIniciarSesion">Iniciar sesión</button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCreaUsuario">Crear usuario</button>        
+                        <button type="button" class="btn btn-primary" id="btn_menu">Volver al menú</button>
+                      </div>
+                    </div>
+                  </div>
+                </header>
+                
+                <!-- Iframe -->
+                <div class="row flex-grow-1" id="marco-iframe">            
+                    <div class="col flex-grow-1">
+                        <div id="deviceready" class="blink">
+
+                          <div class="event listening container-fluid d-flex h-100 text-center text-bg-dark">
+                            <div class="row">            
+                              <div class="col-12">
+                                <div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">                                  
+                                  <main class="px-3">
+                                    <h1>CLV Game Hub</h1>
+                                    <p class="lead">Esta aplicación y su entorno es un proyecto de David Bravo, Adrián Luque e Ignacio Martínez, alumnos del CFGS de Desarrollo de Aplicaciones Multiplataforma. Debes crear un usuario, si no tienes, e iniciar sesión para acceder al servidor de juegos</p>
+                                    <p class="lead" id="alertas">
+                                      <!-- Hueco para las alertas -->
+                                    </p>
+                                  </main>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="modal fade" id="modalCreaUsuario">
+                            <div class="modal-dialog">
+
+                                  <div class="modal-content rounded-4 shadow">
+                                    <div class="modal-header p-5 pb-4 border-bottom-0">
+                                        <h1 class="fw-bold mb-0 fs-2 text-body">Crear usuario</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                          
+                                    <div class="modal-body p-5 pt-0">
+                                      <form id="formSignin">
+                                          <div class="form-floating mb-3">
+                                              <input type="text" class="form-control rounded-3" id="floatingInputCrear" placeholder="nickname" required>
+                                              <label class="text-secondary" for="floatingInputCrear">Usuario</label>
+                                          </div>
+                                          <div class="form-floating mb-3">
+                                              <input type="password" class="form-control rounded-3" id="floatingPasswordCrear" placeholder="Password" required>
+                                              <label class="text-secondary" for="floatingPasswordCrear">Contraseña</label>
+                                          </div>
+                                          <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign up</button>
+                                      </form>
+                                    </div>
+                                  </div>
+                                  
+                            </div>
+                          </div>
+                    
+                          <div class="modal fade" id="modalIniciarSesion">
+                            <div class="modal-dialog">
+                              
+                              <div class="modal-content rounded-4 shadow">
+                                <div class="modal-header p-5 pb-4 border-bottom-0">
+                                    <h1 class="fw-bold mb-0 fs-2 text-body">Iniciar sesión</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                        
+                                <div class="modal-body p-5 pt-0">
+                                    <form id="formLogin">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control rounded-3" id="floatingInputLog" placeholder="nickname" required>
+                                            <label class="text-secondary" for="floatingInputLog">Usuario</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="password" class="form-control rounded-3" id="floatingPasswordLog" placeholder="Password" required>
+                                            <label class="text-secondary" for="floatingPasswordLog">Contraseña</label>
+                                        </div>
+                                        <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Log in</button>
+                                    </form>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <iframe class="event received" id="aplicacion"></iframe>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script>
+        <script src="./bootstrap/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
