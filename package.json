@@ -1,0 +1,25 @@
+{
+  "name": "com.ignacio.app_juegos",
+  "displayName": "CLP_Game_Hub",
+  "version": "1.0.0",
+  "description": "Aplicación cliente que permite acceder a un servidor de juegos, encargándose de separar la lógica del juego de la lógica de gestión.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "Apache Cordova Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "cordova-android": "^11.0.0",
+    "cordova-browser": "^6.0.0"
+  },
+  "cordova": {
+    "platforms": [
+      "browser",
+      "android"
+    ]
+  }
+}

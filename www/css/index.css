@@ -1,0 +1,69 @@
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+section::-webkit-scrollbar {
+    width: 0;
+}
+
+#cabecera{
+    margin-top: 8px;
+}
+
+/* #icono_navbar, #btn_menu{
+    display: none;
+} */
+
+body {
+    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
+    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
+    -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
+    background-color:#E4E4E4;
+    background-image:linear-gradient(to bottom, #A7A7A7 0%, #E4E4E4 51%);
+    font-family: system-ui, -apple-system, -apple-system-font, 'Segoe UI', 'Roboto', sans-serif;
+    font-size:12px;
+    height:100vh;
+    margin:0px;
+    padding:0px;
+    /* Padding to avoid the "unsafe" areas behind notches in the screen */
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    text-transform:uppercase;
+    width:100%;
+}
+
+/* Portrait layout (default) */
+.app {
+    position:absolute;             /* position in the center of the screen */
+    height: 100%;                   /* text area height */
+    width: 100%;                   /* text area width */
+    text-align:center;
+
+    /*margin:-115px 0pbpm update x 0px -112px;   offset vertical: half of image height and text area height */
+                                   /* offset horizontal: half of text area width */
+
+}
+#deviceready .event.received { display: none; }
+#deviceready.ready .event.listening { display: none; }
+#deviceready.ready .event.received { display: block; }
+
+#deviceready{    
+    position:relative;             /* position in the center of the screen */
+    height: 100%;                   /* text area height */
+    width: 100%;                   /* text area width */
+    text-align:center;
+}
+
+#aplicacion {
+    position:relative;             /* position in the center of the screen */
+    height: 100%;                   /* text area height */
+    width: 100%;                   /* text area width */
+    text-align:center;
+}
+
+#marco-iframe {
+    margin-bottom: 16px;
+}
+
+#btn_menu, #icono_navbar {
+    display: none;
+}
