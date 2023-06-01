@@ -4,14 +4,16 @@ const titulo = document.getElementById('btn_menu');
 const login = document.getElementById('formLogin');
 const signin = document.getElementById('formSignin');
 let usuario;
+let puntos;
+let logro;
 
 function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-
-    titulo.addEventListener("click", function() {
-        document.getElementById('aplicacion').src='http://80.30.41.125/';
-    });
 }
+
+titulo.addEventListener("click", function() {
+  document.getElementById('aplicacion').src='http://80.30.41.125/';
+});
 
 login.addEventListener('submit', async (event) => {
     event.preventDefault(); // Evita que el formulario se envíe automáticamente
@@ -118,10 +120,26 @@ signin.addEventListener('submit', async (event) => {
   });
 
 $(window).on('message', function(event) {
-    var datoRecibido = event.originalEvent.data;
-  
-    console.log('Simulación de envío de puntuación:', datoRecibido);
-    //$("#dato").text(datoRecibido.dato);
+  //TODO: recibir puntuacion al empezar, para poder comparar si se guarda o no
+  var datoRecibido = event.originalEvent.data;
+  ///api/scoreboard?user={user_nickname}&game={game_name}&score={score}
+  console.log('Simulación de envío de puntuación:', datoRecibido);
+  if(datoRecibido.tipo=="score"){
+    $.post('http://80.30.41.125/api/scoreboard',
+    {
+      user: nombre,
+      game: datoRecibido.juego,
+      score: datoRecibido.dato
+    });
+  }else if(datoRecibido.tipo=="achievement"){     
+    $.post('http://80.30.41.125/api/scoreboard',
+    {
+      user: nombre,
+      game: datoRecibido.juego,
+      score: datoRecibido.dato
+    });
+  }
+    
 });
 
-//TODO: pasar todo a JQuery
+//TODO: Jquery (?)
