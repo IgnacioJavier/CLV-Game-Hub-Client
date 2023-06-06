@@ -119,27 +119,26 @@ signin.addEventListener('submit', async (event) => {
     }
   });
 
-$(window).on('message', function(event) {
-  //TODO: recibir puntuacion al empezar, para poder comparar si se guarda o no
-  var datoRecibido = event.originalEvent.data;
-  ///api/scoreboard?user={user_nickname}&game={game_name}&score={score}
-  console.log('Simulación de envío de puntuación:', datoRecibido);
-  if(datoRecibido.tipo=="score"){
-    $.post('http://80.30.41.125/api/scoreboard',
-    {
-      user: nombre,
-      game: datoRecibido.juego,
-      score: datoRecibido.dato
-    });
-  }else if(datoRecibido.tipo=="achievement"){     
-    $.post('http://80.30.41.125/api/scoreboard',
-    {
-      user: nombre,
-      game: datoRecibido.juego,
-      score: datoRecibido.dato
-    });
-  }
+  $(window).on('message', function(event) {
+    var datoRecibido = event.originalEvent.data;
+  
     
-});
-
-//TODO: Jquery (?)
+    
+    console.log('Simulación de envío de puntuación:', datoRecibido);
+    if(datoRecibido.tipo=="score"){
+      $.post('http://80.30.41.125/api/scoreboard',
+      {
+        user: usuario,
+        game: datoRecibido.juego,
+        score: datoRecibido.dato
+      });
+    }else if(datoRecibido.tipo=="achievement"){     
+      $.post('http://80.30.41.125/api/scoreboard',
+      {
+        user: usuario,
+        game: datoRecibido.juego,
+        score: datoRecibido.dato
+      });
+    }
+      
+  });
