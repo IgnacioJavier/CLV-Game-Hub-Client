@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>CLV Game Hub (Client Side)</h1>
+<p>Esta es una aplicación híbrida que usa tecnología web para poder dar un servicio multiplataforma. Emplea el IDE <strong>Apache Cordova</strong> para generar correctamente las exportaciones a otras plataformas y poder acceder a su gama de plugins. Nuestra aplicación permite acceder a un servidor de juegos e interactuar con él.</p>
+<h2>Instalación, funcionamiento y uso</h2>
+<p>Desde esta aplicación accedemos a nuestro servidor de juegos. Es también quien interactúa con nuestra base de datos para las peticiones, haciendo esta directamente las peticiones a la API. De esta manera, los juegos carecen de lógica de intercacción con la base de datos y dejan en manos de Cordova la función de login.
+En su forma web, bastaría con cargar su index.html, estando lista para instalar en un servidor web. En su variante de Electron, ejecutamos el archivo .exe y se instalaría en el escritorio, y al arrancar se abriría una ventana propia.</p>
+<h2>Estructura de directorios y archivos</h2>
+<p>La estructura de directorios es la siguiente:</p>
+<pre class="prettyprint source lang-txt"><code>app_juegos/
+|
+|----.vscode/typings/cordova
+|----node_modules/
+|----out/
+|----platforms/
+|    |----browser/
+|    |----electron/
+|----typings
+|----www
+|    |----bootstrap/
+|    |----css/
+|    |       |----style.css
+|    |----img/
+|    |----js/
+|    |      |----index.js
+|    |      |----jquery.min.js
+|    |      |----md5.min.js
+|    |----index.html
+|----config.xml
+|----jsconfig.json
+|----package.json
+|----package.json
+</code></pre>
+<ul>
+<li>Como aplicación que depende de <strong>módulos de NPM</strong>, este proyecto cuenta con sus archivos JSON de configuración de paquetes, además de otro de configuración, vacío en principio. Junto a estos está la configuración del proyecto Cordova en formato XML.</li>
+<li>Es la carpeta www donde se encuentra la aplicación como tal y su estructura no dista tanto de la de una típica aplicación web, con sus directorios separando las imágenes, los archivos JS y la hoja de estilo CSS. Contamos además de forma local con la biblioteca de estilos <strong>Bootstrap</strong> (versión 5). Y el body de nuestra app está en el archivo index.</li>
+<li>La configuración, plugins, etc, de Cordova utilizan un tipado en TypeScript. Este es referenciado en typings hacia el archivo dentro de .vscode/typings/cordova.</li>
+<li>Las exportaciones a cada plataforma se hace en la correspondiente carpeta de platforms. En nuestro caso, exportamos para navegador y Electron, un framework para generar aplicaciones híbridas de escritorio basadas en <strong>Chromium</strong>.</li>
+<li>Hemos generado documentación técnica de nuestra app. Al estar programada en Javascript, nos hemos decantado por <strong>JSDoc</strong> para ello. Hemos incluido dentro de la misma este mismo documento. La carpeta Out contiene el output de dicho módulo, una sencilla web que explica nuestras variables, funciones...</li>
+<li>Los módulos de Node instalados, como en toda app de este tipo, se encuentra en el directorio node_modules.</li>
+</ul>
+<h2>Librerías instaladas</h2>
+<ul>
+<li><a href="https://cordova.apache.org/">Apache Cordova 12.0.1</a></li>
+<li><a href="https://jquery.com/">JQuery 3.6.4</a></li>
+<li><a href="https://getbootstrap.com/">Bootstrap 5.3.0</a></li>
+<li><a href="https://github.com/blueimp/JavaScript-MD5/blob/master/js/md5.min.js">MD5</a></li>
+<li><a href="https://jsdoc.app/index.html">JSDoc</a></li>
+</ul></article>
+    </section>
+
+
+
+
+
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>index.js</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">index.js</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-author">Author:</dt>
+    <dd class="tag-author">
+        <ul>
+            <li>Ignacio Javier Martínez Sánchez</li>
+        </ul>
+    </dd>
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#getHighsc">getHighsc</a></li><li><a href="global.html#guardarUsuario">guardarUsuario</a></li><li><a href="global.html#highsc">highsc</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logros">logros</a></li><li><a href="global.html#onDeviceReady">onDeviceReady</a></li><li><a href="global.html#puntos">puntos</a></li><li><a href="global.html#signin">signin</a></li><li><a href="global.html#titulo">titulo</a></li><li><a href="global.html#usuario">usuario</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Jun 09 2023 19:57:02 GMT+0200 (hora de verano de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
