@@ -6,6 +6,7 @@ const signin = document.getElementById('formSignin');
 let usuario;
 let puntos;
 let logro;
+let highsc;
 
 function onDeviceReady() {
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
@@ -119,26 +120,44 @@ signin.addEventListener('submit', async (event) => {
     }
   });
 
-  $(window).on('message', function(event) {
-    var datoRecibido = event.originalEvent.data;
-  
-    
-    
-    console.log('Simulación de envío de puntuación:', datoRecibido);
-    if(datoRecibido.tipo=="score"){
-      $.post('http://80.30.41.125/api/scoreboard',
-      {
-        user: usuario,
-        game: datoRecibido.juego,
-        score: datoRecibido.dato
+function getHighsc(game, user) {
+  return new Promise((resolve, reject) => {
+    fetch(`http://80.30.41.125/api/scoreboard?user=${user}&game=${game}&top=highsc`, { method: 'GET' })
+      .then((response) => response.json())  // Parsear la respuesta como JSON
+      .then((response) => {
+        highsc = response.score;
+        resolve(highsc);
+      })
+      .catch((error) => {
+        console.error(error);
+        reject(error);
       });
-    }else if(datoRecibido.tipo=="achievement"){     
-      $.post('http://80.30.41.125/api/scoreboard',
-      {
-        user: usuario,
-        game: datoRecibido.juego,
-        score: datoRecibido.dato
-      });
-    }
-      
   });
+}
+
+$(window).on('message', function(event) {
+  var datoRecibido = event.originalEvent.data;
+  console.log('Simulación de envío de puntuación:', datoRecibido);
+
+  getHighsc(datoRecibido.game,usuario)
+    .then((highsc) => {
+      console.log(highsc);  
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  if(datoRecibido.score > highsc){
+  $.post('http://80.30.41.125/api/scoreboard',
+    {
+      user: usuario,
+      game: datoRecibido.game,
+      score: datoRecibido.score,
+      action: 'update'
+    }),
+    function(data, status){
+      alert("Has establecido un nuevo record de: "+datoRecibido.score+" en el juego "+datoRecibido.game);
+    };  
+  }
+    
+});
