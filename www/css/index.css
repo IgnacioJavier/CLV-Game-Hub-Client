@@ -64,6 +64,6 @@ body {
     margin-bottom: 16px;
 }
 
-#btn_menu, #icono_navbar {
+#btn_menu, #icono_navbar, #notificacion_record {
     display: none;
 }

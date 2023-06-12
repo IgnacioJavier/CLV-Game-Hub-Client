@@ -28,6 +28,8 @@
         <article>
             <pre class="prettyprint source linenums"><code>/** Aplicación Cordova de acceso a servidor e interacción con BD
  * @file index.js
+ * @author David Bravo Fernández
+ * @author Adrián Luque Mantero
  * @author Ignacio Javier Martínez Sánchez
  */
 
@@ -49,14 +51,14 @@ const login = document.getElementById('formLogin');
  * @constant
  */
 const signin = document.getElementById('formSignin');
+/** La url de nuestro servidor 
+ * @constant
+ */
+const url = '80.30.41.125';
 
 /** Nuestras variables son aquellas que deben poder cambiar y asignarse */
 /** Nombre del usuario */
 let usuario;
-/** Puntuación */
-let puntos;
-/** logros */
-let logros = [];
 /** Máxima puntuación registrada en la BD */
 let highsc;
 
@@ -71,7 +73,7 @@ function onDeviceReady() {
  * @method
  */
 titulo.addEventListener("click", function() {
-  document.getElementById('aplicacion').src='http://80.30.41.125/';
+  document.getElementById('aplicacion').src='http://'+url+'/';
 });
 
 /** Función de login
@@ -92,7 +94,7 @@ login.addEventListener('submit', async (event) => {
     /** Petición que comprueba si existe el usuario y que sea la contraseña correcta
      * @method
      */
-    const respuesta = await fetch(`http://80.30.41.125/api/user?nickname=${nombre}&amp;pwd=${passhash}`, {
+    const respuesta = await fetch(`http://${url}/api/user?nickname=${nombre}&amp;pwd=${passhash}`, {
         method: 'GET'
     });
 
@@ -113,7 +115,7 @@ login.addEventListener('submit', async (event) => {
         $('#btnSignIn').hide();
 
         /** Cargamos la URL del servidor en el iframe */
-        document.getElementById('aplicacion').src='http://80.30.41.125/';
+        document.getElementById('aplicacion').src='http://'+url+'/';
     } else {
         /** Manejamos el error, si se da, y mostramos un mensaje */
         const error = await respuesta.json();
@@ -136,7 +138,7 @@ signin.addEventListener('submit', async (event) => {
     /** Primero comprobamos si hay un usuario con ese nick
      * @method
      */
-    let comprobacion = await fetch(`http://80.30.41.125/api/user?nickname=${nombre}`);
+    let comprobacion = await fetch(`http://${url}/api/user?nickname=${nombre}`);
   
     /** Un ok implica que sí existe un usuario con ese nick y por tanto el sign in falla */
     if (comprobacion.ok) {
@@ -158,7 +160,7 @@ signin.addEventListener('submit', async (event) => {
       function guardarUsuario(status) {
         return new Promise((resolve, reject) => {
           if (status === 'success') {
-            fetch(`http://80.30.41.125/api/user?nickname=${nombre}&amp;pwd=${passhash}`, { method: 'GET' })
+            fetch(`http://${url}/api/user?nickname=${nombre}&amp;pwd=${passhash}`, { method: 'GET' })
               .then((respuesta2) => {
                 if (respuesta2.ok) {
                   return respuesta2.json();
@@ -184,7 +186,7 @@ signin.addEventListener('submit', async (event) => {
        * @function
        */
       $.post(
-        'http://80.30.41.125/api/user',
+        'http://'+url+'/api/user',
         {
           nickname: nombre,
           pwd: passhash
@@ -200,7 +202,7 @@ signin.addEventListener('submit', async (event) => {
               $('#icono_navbar').show();
               $('#btnLogin').hide();
               $('#btnSignIn').hide();
-              document.getElementById('aplicacion').src = 'http://80.30.41.125/';
+              document.getElementById('aplicacion').src = 'http://'+url+'/';
             })
             .catch((error) => {
               /** En caso de error, lo notificamos */
@@ -222,7 +224,7 @@ signin.addEventListener('submit', async (event) => {
  */
 function getHighsc(game, user) {
   return new Promise((resolve, reject) => {
-    fetch(`http://80.30.41.125/api/scoreboard?user=${user}&amp;game=${game}&amp;top=highsc`, { method: 'GET' })
+    fetch(`http://${url}/api/scoreboard?user=${user}&amp;game=${game}&amp;top=highsc`, { method: 'GET' })
       .then((response) => response.json())
       .then((response) => {
         highsc = response.score;
@@ -233,6 +235,42 @@ function getHighsc(game, user) {
         reject(error);
       });
   });
+}
+
+/** Lógica de manejo de logros, recibe los logros conseguidos y los guarda si no los tenemos
+ * @async
+ * @function manejoLogros
+ * @param {Array&lt;int>} logrosObtenidos 
+ */
+async function manejoLogros(logrosObtenidos){
+  const logrosUsuario = await fetch(`http://${url}/api/user/achievements?nickname=${usuario}`, {
+        method: 'GET'
+    });
+    if(logrosUsuario.ok){
+      const logrosJugador = await logrosUsuario.json();
+
+      for(let i=0;i&lt;logrosObtenidos.length;i++){
+        let existe=false;
+          for(let j=0;j&lt;logrosJugador.legth;j++){
+            if(logrosJugador[j].achievement_id == logrosObtenidos[i]){
+              existe = true;
+            }
+          }
+        if(!existe){
+          $.post('http://'+url+'/api/user/achievements',
+          {
+            nickname: usuario,
+            achievement: logrosObtenidos[i]
+          },
+          function(){
+            alert("Logro desbloqueado");
+          })
+        }
+      }
+    }else{
+      const error = await logrosUsuario.json();
+      console.error(error.mensaje);
+    }
 }
 
 /** Evento que captura el envío de datos desde el iframe, usado por los juegos para comunicarse con el body
@@ -252,18 +290,37 @@ $(window).on('message', function(event) {
       console.error(error);
     });
 
-  if(datoRecibido.score > highsc){
-  $.post('http://80.30.41.125/api/scoreboard',
+  /** El post de datos lo hacemos en una función aparte para que las acciones posteriores se ejecuten correctamente
+   * @function registroRecord
+   * @param {String} usr
+   * @param {String} jueg
+   * @param {String} punt   
+   */
+  function registroRecord(usr, jueg, punt){
+    $.post('http://'+url+'/api/scoreboard',
     {
-      user: usuario,
-      game: datoRecibido.game,
-      score: datoRecibido.score,
+      user: usr,
+      game: jueg,
+      score: punt,
       action: 'update'
-    }),
-    function(data, status){
-      alert("Has establecido un nuevo record de: "+datoRecibido.score+" en el juego "+datoRecibido.game);
-    };  
+    },
+    function(data){
+      $("#notificacion_record").show();
+      $("#notificacion_record").text('Nuevo record: '+datoRecibido.score);
+      setTimeout(function() {
+        $("#notificacion_record").hide();
+        $("#notificacion_record").text('');
+      }, 3000);
+    }, "json");
   }
+
+  /** Solo llamamos al guardado de puntos si superamos el record */
+  if(datoRecibido.score > highsc){
+    registroRecord(usuario, datoRecibido.game, datoRecibido.score);
+  }
+
+  /** Llamamos a la función de logros */
+  manejoLogros(datoRecibido.achievements);
     
 });</code></pre>
         </article>
@@ -275,13 +332,13 @@ $(window).on('message', function(event) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#getHighsc">getHighsc</a></li><li><a href="global.html#guardarUsuario">guardarUsuario</a></li><li><a href="global.html#highsc">highsc</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#logros">logros</a></li><li><a href="global.html#onDeviceReady">onDeviceReady</a></li><li><a href="global.html#puntos">puntos</a></li><li><a href="global.html#signin">signin</a></li><li><a href="global.html#titulo">titulo</a></li><li><a href="global.html#usuario">usuario</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#getHighsc">getHighsc</a></li><li><a href="global.html#guardarUsuario">guardarUsuario</a></li><li><a href="global.html#highsc">highsc</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#manejoLogros">manejoLogros</a></li><li><a href="global.html#onDeviceReady">onDeviceReady</a></li><li><a href="global.html#registroRecord">registroRecord</a></li><li><a href="global.html#signin">signin</a></li><li><a href="global.html#titulo">titulo</a></li><li><a href="global.html#url">url</a></li><li><a href="global.html#usuario">usuario</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Jun 09 2023 19:57:02 GMT+0200 (hora de verano de Europa central)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Jun 12 2023 20:55:16 GMT+0200 (hora de verano de Europa central)
 </footer>
 
 <script> prettyPrint(); </script>

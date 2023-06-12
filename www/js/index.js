@@ -1,5 +1,7 @@
 /** Aplicación Cordova de acceso a servidor e interacción con BD
  * @file index.js
+ * @author David Bravo Fernández
+ * @author Adrián Luque Mantero
  * @author Ignacio Javier Martínez Sánchez
  */
 
@@ -21,14 +23,14 @@ const login = document.getElementById('formLogin');
  * @constant
  */
 const signin = document.getElementById('formSignin');
+/** La url de nuestro servidor 
+ * @constant
+ */
+const url = '80.30.41.125';
 
 /** Nuestras variables son aquellas que deben poder cambiar y asignarse */
 /** Nombre del usuario */
 let usuario;
-/** Puntuación */
-let puntos;
-/** logros */
-let logros = [];
 /** Máxima puntuación registrada en la BD */
 let highsc;
 
@@ -43,7 +45,7 @@ function onDeviceReady() {
  * @method
  */
 titulo.addEventListener("click", function() {
-  document.getElementById('aplicacion').src='http://80.30.41.125/';
+  document.getElementById('aplicacion').src='http://'+url+'/';
 });
 
 /** Función de login
@@ -64,7 +66,7 @@ login.addEventListener('submit', async (event) => {
     /** Petición que comprueba si existe el usuario y que sea la contraseña correcta
      * @method
      */
-    const respuesta = await fetch(`http://80.30.41.125/api/user?nickname=${nombre}&pwd=${passhash}`, {
+    const respuesta = await fetch(`http://${url}/api/user?nickname=${nombre}&pwd=${passhash}`, {
         method: 'GET'
     });
 
@@ -85,7 +87,7 @@ login.addEventListener('submit', async (event) => {
         $('#btnSignIn').hide();
 
         /** Cargamos la URL del servidor en el iframe */
-        document.getElementById('aplicacion').src='http://80.30.41.125/';
+        document.getElementById('aplicacion').src='http://'+url+'/';
     } else {
         /** Manejamos el error, si se da, y mostramos un mensaje */
         const error = await respuesta.json();
@@ -108,7 +110,7 @@ signin.addEventListener('submit', async (event) => {
     /** Primero comprobamos si hay un usuario con ese nick
      * @method
      */
-    let comprobacion = await fetch(`http://80.30.41.125/api/user?nickname=${nombre}`);
+    let comprobacion = await fetch(`http://${url}/api/user?nickname=${nombre}`);
   
     /** Un ok implica que sí existe un usuario con ese nick y por tanto el sign in falla */
     if (comprobacion.ok) {
@@ -130,7 +132,7 @@ signin.addEventListener('submit', async (event) => {
       function guardarUsuario(status) {
         return new Promise((resolve, reject) => {
           if (status === 'success') {
-            fetch(`http://80.30.41.125/api/user?nickname=${nombre}&pwd=${passhash}`, { method: 'GET' })
+            fetch(`http://${url}/api/user?nickname=${nombre}&pwd=${passhash}`, { method: 'GET' })
               .then((respuesta2) => {
                 if (respuesta2.ok) {
                   return respuesta2.json();
@@ -156,7 +158,7 @@ signin.addEventListener('submit', async (event) => {
        * @function
        */
       $.post(
-        'http://80.30.41.125/api/user',
+        'http://'+url+'/api/user',
         {
           nickname: nombre,
           pwd: passhash
@@ -172,7 +174,7 @@ signin.addEventListener('submit', async (event) => {
               $('#icono_navbar').show();
               $('#btnLogin').hide();
               $('#btnSignIn').hide();
-              document.getElementById('aplicacion').src = 'http://80.30.41.125/';
+              document.getElementById('aplicacion').src = 'http://'+url+'/';
             })
             .catch((error) => {
               /** En caso de error, lo notificamos */
@@ -194,7 +196,7 @@ signin.addEventListener('submit', async (event) => {
  */
 function getHighsc(game, user) {
   return new Promise((resolve, reject) => {
-    fetch(`http://80.30.41.125/api/scoreboard?user=${user}&game=${game}&top=highsc`, { method: 'GET' })
+    fetch(`http://${url}/api/scoreboard?user=${user}&game=${game}&top=highsc`, { method: 'GET' })
       .then((response) => response.json())
       .then((response) => {
         highsc = response.score;
@@ -205,6 +207,42 @@ function getHighsc(game, user) {
         reject(error);
       });
   });
+}
+
+/** Lógica de manejo de logros, recibe los logros conseguidos y los guarda si no los tenemos
+ * @async
+ * @function manejoLogros
+ * @param {Array<int>} logrosObtenidos 
+ */
+async function manejoLogros(logrosObtenidos){
+  const logrosUsuario = await fetch(`http://${url}/api/user/achievements?nickname=${usuario}`, {
+        method: 'GET'
+    });
+    if(logrosUsuario.ok){
+      const logrosJugador = await logrosUsuario.json();
+
+      for(let i=0;i<logrosObtenidos.length;i++){
+        let existe=false;
+          for(let j=0;j<logrosJugador.legth;j++){
+            if(logrosJugador[j].achievement_id == logrosObtenidos[i]){
+              existe = true;
+            }
+          }
+        if(!existe){
+          $.post('http://'+url+'/api/user/achievements',
+          {
+            nickname: usuario,
+            achievement: logrosObtenidos[i]
+          },
+          function(){
+            alert("Logro desbloqueado");
+          })
+        }
+      }
+    }else{
+      const error = await logrosUsuario.json();
+      console.error(error.mensaje);
+    }
 }
 
 /** Evento que captura el envío de datos desde el iframe, usado por los juegos para comunicarse con el body
@@ -224,17 +262,36 @@ $(window).on('message', function(event) {
       console.error(error);
     });
 
-  if(datoRecibido.score > highsc){
-  $.post('http://80.30.41.125/api/scoreboard',
+  /** El post de datos lo hacemos en una función aparte para que las acciones posteriores se ejecuten correctamente
+   * @function registroRecord
+   * @param {String} usr
+   * @param {String} jueg
+   * @param {String} punt   
+   */
+  function registroRecord(usr, jueg, punt){
+    $.post('http://'+url+'/api/scoreboard',
     {
-      user: usuario,
-      game: datoRecibido.game,
-      score: datoRecibido.score,
+      user: usr,
+      game: jueg,
+      score: punt,
       action: 'update'
-    }),
-    function(data, status){
-      alert("Has establecido un nuevo record de: "+datoRecibido.score+" en el juego "+datoRecibido.game);
-    };  
+    },
+    function(data){
+      $("#notificacion_record").show();
+      $("#notificacion_record").text('Nuevo record: '+datoRecibido.score);
+      setTimeout(function() {
+        $("#notificacion_record").hide();
+        $("#notificacion_record").text('');
+      }, 3000);
+    }, "json");
   }
+
+  /** Solo llamamos al guardado de puntos si superamos el record */
+  if(datoRecibido.score > highsc){
+    registroRecord(usuario, datoRecibido.game, datoRecibido.score);
+  }
+
+  /** Llamamos a la función de logros */
+  manejoLogros(datoRecibido.achievements);
     
 });
