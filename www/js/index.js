@@ -26,7 +26,7 @@ const signin = document.getElementById('formSignin');
 /** La url de nuestro servidor 
  * @constant
  */
-const url = '80.30.41.125';
+const url = '80.30.41.125:8080';
 
 /** Nuestras variables son aquellas que deben poder cambiar y asignarse */
 /** Nombre del usuario */
