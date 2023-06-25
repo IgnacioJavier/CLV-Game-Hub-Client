@@ -1,5 +1,7 @@
 # CLV Game Hub (Client Side)
 
+Esta aplicación client side forma parte del proyecto de final de ciclo elaborado por Ignacio Javier Martínez Sánchez, Adrián Luque Mantero y David Bravo Fernández, junto con la [aplicación servidor](https://github.com/IgnacioJavier/CLV-Game-Hub-Server)
+
 Esta es una aplicación híbrida que usa tecnología web para poder dar un servicio multiplataforma. Emplea el IDE **Apache Cordova** para generar correctamente las exportaciones a otras plataformas y poder acceder a su gama de plugins. Nuestra aplicación permite acceder a un servidor de juegos e interactuar con él.
 
 ## Instalación, funcionamiento y uso
