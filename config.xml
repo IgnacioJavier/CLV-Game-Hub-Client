@@ -15,6 +15,6 @@
     <content src="index.html" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-    <access origin="http://80.30.41.125:8080/" />
-    <access origin="http://80.30.41.125:8080/*" />
+    <access origin="http://x.x.x.x/" />
+    <access origin="http://x.x.x.x/*" />
 </widget>
